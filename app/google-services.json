@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "212522362057",
+    "project_id": "plantas-5245d",
+    "storage_bucket": "plantas-5245d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212522362057:android:4d1239f97cdcbb84c19918",
+        "android_client_info": {
+          "package_name": "com.example.plantasurbanas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDE5ZicI2VqX42kgpYkSkHJSjzZYaM81LU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
