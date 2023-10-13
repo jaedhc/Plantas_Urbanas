@@ -1,3 +1,27 @@
 <resources>
+    <!-- Textos de los botones del HomeActivity -->
     <string name="app_name">Plantas Urbanas</string>
+    <string name="btn_newprod">Nuevo Producto</string>
+    <string name="btn_mov">Movimiento</string>
+    <string name="btn_stock">Consultar Stock</string>
+    <string name="btn_exit">Salir</string>
+    <string name="btn_takeCode">Tomar Código</string>
+
+    <!-- Textos de los botones del HomeActivity -->
+    <string name="btn_guardar">Guardar</string>
+    <string name="btn_regresar">Regresar</string>
+
+    <!-- Textos de los botones del MovimientoActivity -->
+    <string name="btn_consultar">Consultar</string>
+    <string name="btn_ingreso">Ingreso</string>
+    <string name="btn_salida">Salida</string>
+
+    <!-- Textos utilizados para los campos de cada producto -->
+    <string name="str_code">Código</string>
+    <string name="str_prod">Producto</string>
+    <string name="str_cat">Categoría</string>
+    <string name="str_alm">Almacen</string>
+    <string name="str_med">Medida</string>
+    <string name="str_cant">Cantidad</string>
+    <string name="str_stock">Stock</string>
 </resources>

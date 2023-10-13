@@ -6,4 +6,99 @@
     android:layout_height="match_parent"
     tools:context=".StockActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="120dp"
+                android:layout_height="100dp"
+                android:src="@drawable/logo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.01"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_takeCode"
+                style="@style/NormalBtnHome"
+                android:text="@string/btn_takeCode"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageView" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/BoxCodigo"
+                style="@style/NormalInput"
+                android:hint="@string/str_code"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_takeCode">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/InputCodigo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_consultar"
+                style="@style/NormalBtnHome"
+                android:text="@string/btn_consultar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/BoxCodigo" />
+
+            <TextView
+                android:id="@+id/txtProd"
+                style="@style/InfoProdText"
+                android:text="@string/str_prod"
+                app:layout_constraintTop_toBottomOf="@+id/btn_consultar"
+                app:layout_constraintStart_toStartOf="@id/BoxCodigo"/>
+
+            <TextView
+                android:id="@+id/txtCat"
+                style="@style/InfoProdText"
+                android:text="@string/str_cat"
+                app:layout_constraintTop_toBottomOf="@+id/txtProd"
+                app:layout_constraintStart_toStartOf="@id/txtProd"/>
+
+            <TextView
+                android:id="@+id/txtAlmacen"
+                style="@style/InfoProdText"
+                android:text="@string/str_alm"
+                app:layout_constraintTop_toBottomOf="@+id/txtCat"
+                app:layout_constraintStart_toStartOf="@id/txtCat"/>
+
+            <TextView
+                android:id="@+id/txtStock"
+                style="@style/InfoProdText"
+                android:text="@string/str_stock"
+                app:layout_constraintTop_toBottomOf="@+id/txtAlmacen"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_salir"
+                style="@style/ExitBtnHome"
+                android:text="@string/btn_exit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtStock" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
