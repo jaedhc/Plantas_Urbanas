@@ -1,33 +1,50 @@
 package com.example.plantasurbanas
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.example.plantasurbanas.databinding.ActivityMovimientoBinding
+import com.example.plantasurbanas.databinding.ActivityStockBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.zxing.integration.android.IntentIntegrator
 
 class StockActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityStockBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_stock)
+        binding = ActivityStockBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         init()
     }
 
     private fun init(){
-        val txtCodigo = findViewById<TextInputEditText>(R.id.InputCodigo)
-
-        val btnConsultar = findViewById<Button>(R.id.btn_consultar)
-
-        btnConsultar.setOnClickListener {
-            val codigo = txtCodigo.text.toString()
+        binding.btnConsultar.setOnClickListener {
+            val codigo = binding.InputCodigo.text.toString()
             if(verificarCodigo(codigo)){
                 obtenerValores(codigo)
             }
         }
 
+        binding.btnRegresar.setOnClickListener {
+            finish()
+        }
+
+        binding.btnScan.setOnClickListener{
+            iniciarScan()
+        }
+
+    }
+
+    private fun iniciarScan(){
+        val integrator = IntentIntegrator(this)
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
+        integrator.initiateScan()
     }
 
     private fun verificarCodigo(codigo:String):Boolean{
@@ -74,6 +91,20 @@ class StockActivity : AppCompatActivity() {
 
         texto = "Stock: $Stock"
         txtStock.text = texto
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+
+        if(result != null){
+            if(result.contents == null){
+                Toast.makeText(this, "Cancelado", Toast.LENGTH_LONG).show()
+            } else {
+                binding.InputCodigo.setText(result.contents.toString())
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
 }

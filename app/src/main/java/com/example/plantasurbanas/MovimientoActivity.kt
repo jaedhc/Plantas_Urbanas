@@ -1,62 +1,81 @@
 package com.example.plantasurbanas
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
+import com.example.plantasurbanas.databinding.ActivityMovimientoBinding
+import com.example.plantasurbanas.databinding.ActivityNewProductBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.zxing.integration.android.IntentIntegrator
 
 class MovimientoActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMovimientoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movimiento)
+        binding = ActivityMovimientoBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         init()
     }
 
     private fun init(){
-
-        val chkIngreso = findViewById<CheckBox>(R.id.chkIngreso)
-        val chkSalida = findViewById<CheckBox>(R.id.chkSalida)
-        val btnConsultar = findViewById<Button>(R.id.btn_consultar)
-        val btnGuardar = findViewById<Button>(R.id.btn_guardar)
-
-        val txtCodigo = findViewById<TextInputEditText>(R.id.InputCodigo)
-        val txtCantidad = findViewById<TextInputEditText>(R.id.InputCantidad)
-
-        chkIngreso.setOnClickListener {
-            if(chkSalida.isChecked){
-                chkSalida.isChecked = false
+        binding.chkIngreso.setOnClickListener {
+            if(binding.chkSalida.isChecked){
+                binding.chkSalida.isChecked = false
             }
         }
 
-        chkSalida.setOnClickListener {
-            if(chkIngreso.isChecked){
-                chkIngreso.isChecked = false
+        binding.chkSalida.setOnClickListener {
+            if(binding.chkIngreso.isChecked){
+                binding.chkIngreso.isChecked = false
             }
         }
 
-        btnConsultar.setOnClickListener {
-            val codigo = txtCodigo.text.toString()
+        binding.btnConsultar.setOnClickListener {
+            val codigo = binding.InputCodigo.text.toString()
             if(verificarCodigo(codigo)){
                 obtenerValores(codigo)
             }
         }
 
-        btnGuardar.setOnClickListener {
-            var cantidad = txtCantidad.text.toString().toInt()
-            val codigo = txtCodigo.text.toString()
+        binding.btnGuardar.setOnClickListener {
+            var cantidad:Int
+            try{
+                cantidad = binding.InputCantidad.text.toString().toInt()
+            } catch (e: Exception){
+                Toast.makeText(this, "El campo Cantidad no puede estar vacío", Toast.LENGTH_LONG).show()
+                cantidad = 0
+            }
 
-            if(chkSalida.isChecked){
+            val codigo = binding.InputCodigo.text.toString()
+
+            if(binding.chkSalida.isChecked){
                 cantidad *= -1
             }
-            if(verificarCodigo(codigo)){
-                obtenerStock(codigo, cantidad)
+            if(verificarCodigo(codigo) && cantidad != 0){
+                modificarStock(codigo, cantidad)
             }
         }
+
+        binding.btnRegresar.setOnClickListener {
+            finish()
+        }
+
+        binding.btnScan.setOnClickListener{
+            iniciarScan()
+        }
+    }
+
+    private fun iniciarScan(){
+        val integrator = IntentIntegrator(this)
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
+        integrator.initiateScan()
     }
 
     private fun verificarCodigo(codigo:String):Boolean{
@@ -76,9 +95,9 @@ class MovimientoActivity : AppCompatActivity() {
                     for (docs in it){
                         val prod = docs.getString("Producto").toString()
                         val cat = docs.getString("Categoria").toString()
-                        val alm = docs.getString("Almacen").toString()
+                        val stock = docs.getString("Stock").toString()
                         val med = docs.getString("Medida").toString()
-                        mostrarValores(prod, cat, alm, med)
+                        mostrarValores(prod, cat, stock, med)
                     }
                 }
             }
@@ -104,28 +123,46 @@ class MovimientoActivity : AppCompatActivity() {
         txtMed.text = texto
     }
 
-    private fun obtenerStock(codigo:String, cantidad:Int){
+    private fun modificarStock(codigo:String, cantidad:Int){
         val db = FirebaseFirestore.getInstance()
         db.collection("Productos").whereEqualTo("Codigo", codigo)
             .get()
             .addOnSuccessListener {
-                for(docs in it){
-                    val stock = docs.get("Stock").toString().toInt()
-                    val nuevoStock = stock + cantidad
-                    if(nuevoStock >= 0){
-                        val hashMap = hashMapOf(
-                            "Stock" to nuevoStock
-                        )
-                        db.collection("Productos")
-                            .document(docs.id).update(hashMap as Map<String, Any>)
-                            .addOnSuccessListener {
-                                Toast.makeText(this, "Stock modificado correctamente", Toast.LENGTH_LONG).show()
-                            }
-                    }else {
-                        Toast.makeText(this, "No tiene suficiente en stock para retirar", Toast.LENGTH_LONG).show()
+                if(it.isEmpty){
+                    Toast.makeText(this, "No se encuentra ningún prodcuto con este codigo", Toast.LENGTH_LONG).show()
+                } else {
+                    for(docs in it){
+                        val stock = docs.get("Stock").toString().toInt()
+                        val nuevoStock = stock + cantidad
+                        if(nuevoStock >= 0){
+                            val hashMap = hashMapOf(
+                                "Stock" to nuevoStock
+                            )
+                            db.collection("Productos")
+                                .document(docs.id).update(hashMap as Map<String, Any>)
+                                .addOnSuccessListener {
+                                    Toast.makeText(this, "Stock modificado correctamente", Toast.LENGTH_LONG).show()
+                                }
+                        }else {
+                            Toast.makeText(this, "No tiene suficiente en stock para retirar", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+
+        if(result != null){
+            if(result.contents == null){
+                Toast.makeText(this, "Cancelado", Toast.LENGTH_LONG).show()
+            } else {
+                binding.InputCodigo.setText(result.contents.toString())
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
 }

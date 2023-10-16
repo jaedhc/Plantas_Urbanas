@@ -3,13 +3,15 @@ package com.example.plantasurbanas
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.plantasurbanas.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityHomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         init()
     }
@@ -17,26 +19,26 @@ class HomeActivity : AppCompatActivity() {
     private fun init (){
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        val btnNewProductActivity = findViewById<Button>(R.id.btn_newprod)
-        val btnNewMovimiento = findViewById<Button>(R.id.btn_mov)
-        val btnStock = findViewById<Button>(R.id.btn_stock)
-
-        btnNewProductActivity.setOnClickListener{
+        binding.btnNewprod.setOnClickListener{
             callNewProduct()
         }
 
-        btnNewMovimiento.setOnClickListener {
+        binding.btnMov.setOnClickListener {
             callMovimiento()
         }
 
-        btnStock.setOnClickListener {
+        binding.btnStock.setOnClickListener {
             callStock()
+        }
+
+        binding.btnExit.setOnClickListener{
+            finish()
         }
 
     }
 
     private fun callNewProduct(){
-        val activityNewProd = Intent(this, NewProductActivity::class.java)
+        val activityNewProd = Intent(this, NuevoProductoActivity::class.java)
         startActivity(activityNewProd)
     }
 
